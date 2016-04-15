@@ -1,0 +1,261 @@
+---
+layout: default
+---
+<div data-role="page" data-url="select-page" id="select-page">
+    <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+            <div data-position="fixed" data-role="header">
+                <a class="ui-btn-left ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all" href="{{ site.url }}/province/{{page.returnpage}}.html" data-rel="external">Back</a>
+                <h3 style="text-align:center;"><a href="{{ site.url }}/index.html" rel="external">VPH</a>-{{page.pagetitle}}</h3>
+                <a class="ui-btn-right ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all" href="#about-page">About</a>
+            </div>
+            <div class="ui-content" role="main">
+                  {{ content }}
+            </div>
+        </div>
+        <div class="ui-block-c"></div>
+    </div>
+</div>
+{{page.district}}
+{% include generate.html %}
+<script>
+  var vote = [];
+  var print = function(v) {
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    var ox = (canvas.width * .8) - ((canvas.height * .3) / 2);
+    var oy = (canvas.height * .7);
+    var x = canvas.height * .25;
+    var y = canvas.height * .25;
+    ctx.font = "20px Arial";
+    ctx.beginPath();
+    ctx.moveTo(ox, (y / 2) + oy);
+    ctx.lineTo((x) + ox, (y / 2) + oy);
+    ctx.lineTo((x / 2) + ox, oy);
+    ctx.lineTo(ox, (y / 2) + oy);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo((x / 2) + ox, (y / 2) + oy);
+    ctx.arc((x / 2) + ox, (y / 2) + oy, (x * .4), 0, Math.PI);
+    ctx.lineTo((x / 2) + ox, (y / 2) + oy);
+    ctx.fillStyle = "#ffe39f";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo((x / 2) + ox, ((y * 3) / 4) + oy);
+    ctx.arc((x / 2) + ox, ((y * 3) / 4) + oy, (x * .1), 0, Math.PI);
+    ctx.lineTo((x / 2) + ox, ((y * 3) / 4) + oy);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.font = "20px Arial";
+    ctx.fillText("VPH-2016", (x / 2) + ox - 45, y + 10 + oy);
+    var X = 50;
+    var Y = 30;
+    var XAD = X + 250;
+    $.each(v, function(index, value) {
+        if (value.can[0].length !== 1) {
+            $.each(value.can, function(i, g) {
+                if (i === 0) {
+                    if (g !== undefined) {
+                        ctx.fillText(value.pos.replace(/\s\s+/g, ' '), X, Y, XAD);
+                        Y = Y + 20;
+                        if (value.can.length === 1) {
+                            ctx.fillText("    " + g.replace(/\s\s+/g, ' '), X, Y,XAD);
+                        } else {
+                            ctx.fillText(i + 1 + ": " + g.replace(/\s\s+/g, ' '), X, Y, XAD);
+                        }
+                    }
+                } else {
+                    if (g !== undefined) {
+                        ctx.fillText(i + 1 + ": " + g.replace(/\s\s+/g, ' '), X, Y, XAD);
+                    }
+                }
+                Y = Y + 20;
+                if (Y > canvas.height - 30) {
+                    Y = 20;
+                    X = X + 330;
+                };
+            });
+            Y = Y + 10
+        }
+    });
+    var image = canvas.toDataURL("image/png");
+    var dwnld = document.getElementById("btn_dwnld");
+    dwnld.setAttribute("download", "image.png");
+    dwnld.setAttribute("href", image);
+  };
+  $(document).on("click", "#btn_reset", function(e) {
+    $.each($("select[class=selectID]"), function(index, value) {
+        $("#" + value.id).val("").selectmenu("refresh");
+        localStorage.removeItem($("#titleID").attr("value") + value.id);
+        $("#" + value.id).parent().parent().show();
+    });
+    {{page.district-reset}}
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  });
+  $(document).on("click", "#btn_index", function(e) {
+    if (typeof(Storage) !== "undefined") {
+        localStorage.removeItem("o");
+    }
+  });
+  $(document).on("click", "#btn_save", function(e) {
+    if (typeof(Storage) !== "undefined") {
+        vote = [];
+        $.each($("select[class=selectID]"), function(index, value) {
+            localStorage.setItem($("#titleID").attr("value") +
+                value.id, $("#" + value.id).val());
+            vote.push({
+                "pos": $("#" + value.id).parent().prev().text(),
+                "can": $("#" + value.id).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
+            });
+        });
+        print(vote);
+        $.mobile.pageContainer.pagecontainer("change", "#about-page", {});
+    }
+  });
+  $(document).ready(function() {
+    if (typeof(Storage) !== "undefined") {
+        {{page.district-click}}
+        $.each($("select[class=selectID]"), function(index, value) {
+            if ((localStorage.getItem($("#titleID").attr("value") + value.id) !== null) && (localStorage.getItem($("#titleID").attr("value") + value.id) !== "")) {
+                b = localStorage.getItem($("#titleID").attr("value") + value.id);
+                $.each(b.split(","), function(i, v) {
+                    if (v !== "") {
+                        $("#" + value.id + " option[value=" + v + "]").prop("selected", true);
+                        $("#" + value.id).selectmenu("refresh", true);
+                    }
+                });
+            }
+        });
+        $.each($("select[class=selectID]"), function(index, value) {
+            vote.push({
+                "pos": $("#" + value.id).parent().prev().text(),
+                "can": $("#" + value.id).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
+            })
+        });
+        print(vote);
+    }
+  });
+  {{page.district-change}}
+
+  function statusChangeCallback(response,action) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      if (action=="post"){
+        if (confirm("The image will be uploaded to your photo and post to your feed.")){
+          postImageToFacebook(response.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, window.location.href);
+        }
+      }
+      $("#btn_post").show();
+    } else if (response.status === 'not_authorized') {
+      $("#btn_post").hide();
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    } else {
+      $("#btn_post").hide();
+      document.getElementById('status').innerHTML = 'Please log '+
+        'into Facebook.';
+    }
+  }
+
+  function checkLoginState(action) {
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response,action);
+    });
+  }
+
+  function dataURItoBlob(dataURI) {
+      var byteString = atob(dataURI.split(',')[1]);
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], {type: 'image/png'});
+    }
+  $("#btn_post").click(function () {
+      var data = $('#canv')[0].toDataURL("image/png");
+      try {
+          blob = dataURItoBlob(data);
+      } catch (e) {
+          console.log(e);
+      }
+      checkLoginState('post');
+    });
+  function postImageToFacebook(token, filename, mimeType, imageData, message) {
+    var fd = new FormData();
+    fd.append("access_token", token);
+    fd.append("source", imageData);
+    fd.append("no_story", true);
+
+    //UPLOAD PHOTO TO USER
+    $.ajax({
+        url: "https://graph.facebook.com/me/photos?access_token=" + token,
+        type: "POST",
+        data: fd,
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (data) {
+            //GET IMAGE LINK
+            FB.api(
+                "/" + data.id + "?fields=images",
+                function (response) {
+                    if (response && !response.error) {
+                        //SHARE TO FEED
+                        FB.api(
+                            "/me/feed",
+                            "POST",
+                            {
+                                "message": "",
+                                "picture": response.images[0].source,
+                                "link": '{{ site.url }}{{ page.url }}',
+                                "name": "{{ page.title }}",
+                                "description": "Philippines Voter's Guide to 2016 Election. Election is not for the politician it is for us and our next generation. Never forget. Save your vote. Choose wisely.",
+                                "privacy": {
+                                    value: 'SELF'
+                                }
+                            },
+                            function (response) {
+                                if (response && !response.error) {
+
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+        },
+        error: function (shr, status, data) {
+            console.log("error " + data + " Status " + shr.status);
+        },
+        complete: function (data) {
+            alert("Done!");
+        }
+    });
+  }
+</script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=567062553469977";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<script>
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
+</script>

@@ -1,0 +1,6 @@
+---
+layout: menu
+searchFor: "City/Municipality"
+title: IFUGAO
+---
+<li><a class="oID" href="{{site.url}}/citymuni/2708.html" value="IFUGAO, AGUINALDO" rel="external">AGUINALDO</a></li><li><a class="oID" href="{{site.url}}/citymuni/2707.html" value="IFUGAO, ALFONSO LISTA (POTIA)" rel="external">ALFONSO LISTA (POTIA)</a></li><li><a class="oID" href="{{site.url}}/citymuni/2711.html" value="IFUGAO, ASIPULO" rel="external">ASIPULO</a></li><li><a class="oID" href="{{site.url}}/citymuni/2701.html" value="IFUGAO, BANAUE" rel="external">BANAUE</a></li><li><a class="oID" href="{{site.url}}/citymuni/2709.html" value="IFUGAO, HINGYON" rel="external">HINGYON</a></li><li><a class="oID" href="{{site.url}}/citymuni/2702.html" value="IFUGAO, HUNGDUAN" rel="external">HUNGDUAN</a></li><li><a class="oID" href="{{site.url}}/citymuni/2703.html" value="IFUGAO, KIANGAN" rel="external">KIANGAN</a></li><li><a class="oID" href="{{site.url}}/citymuni/2704.html" value="IFUGAO, LAGAWE" rel="external">LAGAWE</a></li><li><a class="oID" href="{{site.url}}/citymuni/2705.html" value="IFUGAO, LAMUT" rel="external">LAMUT</a></li><li><a class="oID" href="{{site.url}}/citymuni/2706.html" value="IFUGAO, MAYOYAO" rel="external">MAYOYAO</a></li><li><a class="oID" href="{{site.url}}/citymuni/2710.html" value="IFUGAO, TINOC" rel="external">TINOC</a></li>

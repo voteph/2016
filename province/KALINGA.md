@@ -1,0 +1,6 @@
+---
+layout: menu
+searchFor: "City/Municipality"
+title: KALINGA
+---
+<li><a class="oID" href="{{site.url}}/citymuni/3201.html" value="KALINGA, BALBALAN" rel="external">BALBALAN</a></li><li><a class="oID" href="{{site.url}}/citymuni/3206.html" value="KALINGA, LUBUAGAN" rel="external">LUBUAGAN</a></li><li><a class="oID" href="{{site.url}}/citymuni/3208.html" value="KALINGA, PASIL" rel="external">PASIL</a></li><li><a class="oID" href="{{site.url}}/citymuni/3209.html" value="KALINGA, PINUKPUK" rel="external">PINUKPUK</a></li><li><a class="oID" href="{{site.url}}/citymuni/3211.html" value="KALINGA, RIZAL (LIWAN)" rel="external">RIZAL (LIWAN)</a></li><li><a class="oID" href="{{site.url}}/citymuni/3213.html" value="KALINGA, TABUK CITY" rel="external">TABUK CITY</a></li><li><a class="oID" href="{{site.url}}/citymuni/3214.html" value="KALINGA, TANUDAN" rel="external">TANUDAN</a></li><li><a class="oID" href="{{site.url}}/citymuni/3215.html" value="KALINGA, TINGLAYAN" rel="external">TINGLAYAN</a></li>
