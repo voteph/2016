@@ -161,11 +161,9 @@ layout: default
         }
       }
     } else if (response.status === 'not_authorized') {
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
+      alert('Please log into this app.');
     } else {
-      document.getElementById('status').innerHTML = 'Please log '+
-        'into Facebook.';
+      alert('Please log into Facebook.');
     }
   }
 
