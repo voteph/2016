@@ -147,6 +147,7 @@ layout: default
   {{page.district-change}}
 
   function statusChangeCallback(response,action) {
+    $.mobile.loading("hide");
     console.log('statusChangeCallback');
     console.log(response);
     // The response object is returned with a status field that lets the
@@ -159,19 +160,17 @@ layout: default
           postImageToFacebook(response.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, window.location.href);
         }
       }
-      $("#btn_post").show();
     } else if (response.status === 'not_authorized') {
-      $("#btn_post").hide();
       document.getElementById('status').innerHTML = 'Please log ' +
         'into this app.';
     } else {
-      $("#btn_post").hide();
       document.getElementById('status').innerHTML = 'Please log '+
         'into Facebook.';
     }
   }
 
   function checkLoginState(action) {
+    $.mobile.loading("show");
     FB.getLoginStatus(function(response) {
         statusChangeCallback(response,action);
     });
@@ -196,6 +195,7 @@ layout: default
       checkLoginState('post');
     });
   function postImageToFacebook(token, filename, mimeType, imageData, message) {
+    $.mobile.loading("show");
     var fd = new FormData();
     fd.append("access_token", token);
     fd.append("source", imageData);
@@ -240,10 +240,12 @@ layout: default
             );
         },
         error: function (shr, status, data) {
+            $.mobile.loading("hide");
             console.log("error " + data + " Status " + shr.status);
         },
         complete: function (data) {
             alert("Done!");
+            $.mobile.loading("hide");
         }
     });
   }
