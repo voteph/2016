@@ -2,6 +2,7 @@
 layout: menu
 searchFor: "Province"
 title: VPH
+filterReveal: 'data-filter-reveal="true"'
 ---
 <li><a class="oID" href="{{site.url}}/province/METRO%20MANILA.html" value="METRO MANILA" rel="external">METRO MANILA</a></li>
 <li><a class="oID" href="{{site.url}}/province/ABRA.html" value="ABRA" rel="external">ABRA</a></li>

@@ -16,33 +16,52 @@ layout: default
                     </div><a class="twitter-share-button" data-url="{{site.url}}{{page.url}}" href="https://twitter.com/share">Tweet</a>
                 </div> -->
                 <div class="ui-body ui-body-a ui-corner-all">
-                    <ul data-filter="true" data-filter-placeholder="Search a {{ page.searchFor }}" data-inset="true" data-role="listview" id="selectList">
+                    <ul data-filter="true" data-filter-placeholder="Search a {{ page.searchFor }}" {{ page.filterReveal }} data-inset="true" data-role="listview" id="selectList">
                         {{ content }}
                     </ul>
                 </div>
             </div>
         </div>
         <div class="ui-block-c"></div>
-    </div>
+    </div >
+  </br>
+  </br>
+  </br>
+  <hr>
+    <div class="ui-grid-a ui-responsive">
+      <h2 style="text-align:center;">How to Use</h2>
+		<div class="ui-block-a">
+			<div class="ui-grid-a ui-responsive">
+				<div class="ui-block-a">
+          <hr>
+					<div style="width: 100%;">
+					<img id="icp" src="{{ site.url }}/css/images/icp.png" alt="Choose a Province" style="width: 100%;">
+					</div>
+				</div>
+				<div class="ui-block-b">
+          <hr>
+					<div style="width: 100%;">
+					<img id="icm" src="{{ site.url }}/css/images/icm.png" alt="Choose a City/Municipality" style="width: 100%;">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui-block-b">
+			<div class="ui-grid-a ui-responsive">
+				<div class="ui-block-a">
+          <hr>
+					<div style="width: 100%;">
+					<img id="icc" src="{{ site.url }}/css/images/icc.png" alt="Choose the Candidates" style="width: 100%;">
+					</div>
+				</div>
+				<div class="ui-block-b">
+          <hr>
+					<div style="width: 100%;">
+					<img id="ifd" src="{{ site.url }}/css/images/ifd.png" alt="Post to Facebook or Download" style="width: 100%;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>$(document).on("click",".oID",function(e) { localStorage.setItem("o", $(this).attr("href")); });</script>
-<!-- <script>
-window.fbAsyncInit = function() {
-FB.init({
-  appId      : '567062553469977',
-  xfbml      : true,
-  version    : 'v2.5'
-});
-};
-
-(function(d, s, id){
- var js, fjs = d.getElementsByTagName(s)[0];
- if (d.getElementById(id)) {return;}
- js = d.createElement(s); js.id = id;
- js.src = "//connect.facebook.net/en_US/sdk.js";
- fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
-<script>
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
-</script> -->

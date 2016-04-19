@@ -27,10 +27,10 @@ layout: default
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    var ox = (canvas.width * .8) - ((canvas.height * .3) / 2);
-    var oy = (canvas.height * .7);
-    var x = canvas.height * .25;
-    var y = canvas.height * .25;
+    var ox = (canvas.width * .9);
+    var oy = (canvas.height * .05);
+    var x = canvas.height * .1;
+    var y = canvas.height * .1;
     ctx.font = "20px Arial";
     ctx.beginPath();
     ctx.moveTo(ox, (y / 2) + oy);
@@ -51,8 +51,9 @@ layout: default
     ctx.lineTo((x / 2) + ox, ((y * 3) / 4) + oy);
     ctx.fillStyle = "black";
     ctx.fill();
-    ctx.font = "20px Arial";
+    ctx.font = "12px Arial";
     ctx.fillText("VPH-2016", (x / 2) + ox - 45, y + 10 + oy);
+    ctx.font = "20px Arial";
     var X = 50;
     var Y = 30;
     var XAD = X + 250;
@@ -83,12 +84,38 @@ layout: default
             Y = Y + 10
         }
     });
-    var image = canvas.toDataURL("image/png");
-    var dwnld = document.getElementById("btn_dwnld");
-    dwnld.setAttribute("download", "image.png");
-    dwnld.setAttribute("href", image);
+      var ox = (canvas.width * .8);
+      var oy = (canvas.height * .6);
+      var x = canvas.height * .25;
+      var y = canvas.height * .25;
+      var profName = document.getElementById("profName");
+      ctx.fillText(profName.innerHTML, ox-50, oy+y+30, x+100);
+      ctx.fillText("{{page.pagetitle}}", ox-50, oy+y+60, x+100);
+      var img = new Image();
+          img = document.getElementById("profImage");
+          img.height = y;
+          img.width = x;
+          if (profImage.getAttribute('linksrc') === null){
+            profImage.setAttribute('linksrc', '')
+          }
+          img.src = profImage.getAttribute('linksrc');
+    		  img.setAttribute('crossOrigin', 'anonymous');
+          img.onload = function() {
+              ctx.drawImage(img, ox, oy, x, y);
+    	        var image = canvas.toDataURL("image/png");
+    	        var dwnld = document.getElementById("btn_dwnld");
+    			    dwnld.setAttribute("download", "image.png");
+    			    dwnld.setAttribute("href", image);
+            }
+
+      var image = canvas.toDataURL("image/png");
+      var dwnld = document.getElementById("btn_dwnld");
+      dwnld.setAttribute("download", "image.png");
+      dwnld.setAttribute("href", image);
+      $.mobile.loading("hide");
   };
   $(document).on("click", "#btn_reset", function(e) {
+    $.mobile.loading("show");
     $.each($("select[class=selectID]"), function(index, value) {
         $("#" + value.id).val("").selectmenu("refresh");
         localStorage.removeItem($("#titleID").attr("value") + value.id);
@@ -100,13 +127,17 @@ layout: default
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    $.mobile.loading("hide");
   });
   $(document).on("click", "#btn_index", function(e) {
+    $.mobile.loading("show");
     if (typeof(Storage) !== "undefined") {
         localStorage.removeItem("o");
     }
+    $.mobile.loading("hide");
   });
   $(document).on("click", "#btn_save", function(e) {
+    $.mobile.loading("show");
     if (typeof(Storage) !== "undefined") {
         vote = [];
         $.each($("select[class=selectID]"), function(index, value) {
@@ -122,11 +153,12 @@ layout: default
     }
   });
   $(document).ready(function() {
+    $.mobile.loading("show");
     if (typeof(Storage) !== "undefined") {
         {{page.district-click}}
         $.each($("select[class=selectID]"), function(index, value) {
             if ((localStorage.getItem($("#titleID").attr("value") + value.id) !== null) && (localStorage.getItem($("#titleID").attr("value") + value.id) !== "")) {
-                b = localStorage.getItem($("#titleID").attr("value") + value.id);
+                var b = localStorage.getItem($("#titleID").attr("value") + value.id);
                 $.each(b.split(","), function(i, v) {
                     if (v !== "") {
                         $("#" + value.id + " option[value=" + v + "]").prop("selected", true);
@@ -143,32 +175,67 @@ layout: default
         });
         print(vote);
     }
+    $('#profName').hide();
+    $('#profImage').hide();
   });
   {{page.district-change}}
 
-  function statusChangeCallback(response,action) {
-    $.mobile.loading("hide");
-    console.log('statusChangeCallback');
-    console.log(response);
-    // The response object is returned with a status field that lets the
-    // app know the current login status of the person.
-    // Full docs on the response object can be found in the documentation
-    // for FB.getLoginStatus().
+  function statusChangeCallback(response, action) {
     if (response.status === 'connected') {
+      $.mobile.loading("show");
+	    FB.api(
+            "/me?fields=id,name",
+            function (response) {
+              $.mobile.loading("hide");
+              if (response && !response.error) {
+                var profName = document.getElementById('profName');
+                profName.innerHTML = response.name;
+                $('#profName').show();
+                $.mobile.loading("show");
+                FB.api(
+                    "/me/picture?type=large",
+                    function (response) {
+                      if (response && !response.error) {
+                        $('#profImage').show();
+                        var profImage = document.getElementById('profImage');
+						            profImage.setAttribute('linksrc', response.data.url);
+                        profImage.src = response.data.url
+						            profImage.setAttribute('crossOrigin', 'anonymous');
+                        print(vote);
+                      } else {
+                        return false;
+                      }
+                      $.mobile.loading("hide");
+                    }
+                );
+              }
+              else {
+                return false;
+              }
+            }
+        );
       if (action=="post"){
         if (confirm("The image will be uploaded to your photo and post to your feed.")){
-          postImageToFacebook(response.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, window.location.href);
+          var message = prompt("Write a message.", "");
+          postImageToFacebook(response.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, message);
         }
       }
     } else if (response.status === 'not_authorized') {
-      alert('Please log into this app.');
+      var profName = document.getElementById('profName');
+      profName.innerHTML =  "";
+      var profImage = document.getElementById('profImage');
+      profImage.src = "";
+      print(vote);
     } else {
-      alert('Please log into Facebook.');
+      var profName = document.getElementById('profName');
+      profName.innerHTML = "";
+      var profImage = document.getElementById('profImage');
+      profImage.src = "";
+      print(vote);
     }
   }
 
   function checkLoginState(action) {
-    $.mobile.loading("show");
     FB.getLoginStatus(function(response) {
         statusChangeCallback(response,action);
     });
@@ -184,22 +251,28 @@ layout: default
       return new Blob([ab], {type: 'image/png'});
     }
   $("#btn_post").click(function () {
+    $.mobile.loading("show");
+      if (document.getElementById('profName').innerHTML==""){
+        alert('Please login to Facebook.')
+        return false;
+      }
       var data = $('#canv')[0].toDataURL("image/png");
       try {
           blob = dataURItoBlob(data);
       } catch (e) {
           console.log(e);
       }
+      print(vote);
       checkLoginState('post');
     });
   function postImageToFacebook(token, filename, mimeType, imageData, message) {
-    $.mobile.loading("show");
     var fd = new FormData();
     fd.append("access_token", token);
     fd.append("source", imageData);
     fd.append("no_story", true);
 
     //UPLOAD PHOTO TO USER
+    $.mobile.loading("show");
     $.ajax({
         url: "https://graph.facebook.com/me/photos?access_token=" + token,
         type: "POST",
@@ -218,41 +291,49 @@ layout: default
                             "/me/feed",
                             "POST",
                             {
-                                "message": "",
+                                "message": message,
                                 "picture": response.images[0].source,
-                                "link": '{{ site.url }}{{ page.url }}',
-                                "name": "{{ page.title }}",
-                                "description": "Philippines Voter's Guide to 2016 Election. Election is not for the politician it is for us and our next generation. Never forget. Save your vote. Choose wisely."
+                                "link": '{{ site.url }}',
+                                "name": "{{ page.title }}. Choose your candidates now!",
+                                "description": "This is it! I will vote for them in this comming election. May God bless us all."
                             },
                             function (response) {
                                 if (response && !response.error) {
-
+                                    $.mobile.loading("hide");
+                                }
+                                else {
+                                  alert('Sending failed. Please try again.');
                                 }
                             }
                         );
                     }
                 }
             );
+            $.mobile.loading("hide");
         },
         error: function (shr, status, data) {
             $.mobile.loading("hide");
+            alert('Sending failed. Please try again.');
             console.log("error " + data + " Status " + shr.status);
         },
         complete: function (data) {
-            alert("Done!");
             $.mobile.loading("hide");
+            alert('Sending failed. Please try again.');
+            alert("Done!");
         }
     });
   }
 </script>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+<script>
+window.fbAsyncInit = function() {
+    checkLoginState('load','')
+};
+
+(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=567062553469977";
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=569609686548597";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<script>
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
-</script>
