@@ -68,4 +68,4 @@ layout: default
 		</div>
 	</div>
 </div>
-<script>$(document).on("click",".oID",function(e) { localStorage.setItem("o", $(this).attr("href")); });</script>
+<script>$(document).on("ready",function() { $.mobile.autoInitializePage = false; window.location.hash = ''; $.mobile.initializePage(); });$(document).on("click",".oID",function(e) { localStorage.setItem("o", $(this).attr("href")); });</script>
