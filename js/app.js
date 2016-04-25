@@ -257,7 +257,7 @@ app.initialize = function() {
   $('#profName').hide();
   $('#profImage').hide();
 }
-app.FBPost = function () {
+app.fbPost = function () {
   $.mobile.loading("show");
     if (profName.innerHTML==""){
       alert('Please login to Facebook.')
