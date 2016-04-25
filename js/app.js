@@ -121,7 +121,8 @@ app.draw = function(v) {
     x = canvas.height * .25;
     y = canvas.height * .25;
     ctx.fillText(profName.innerHTML, ox-50, oy+y+30, x+100);
-    ctx.fillText(titleID.text, ox-50, oy+y+60, x+100);
+    var titleText = decodeURI(titleID.text)
+    ctx.fillText(titleText, ox-50, oy+y+60, x+100);
     var img = new Image();
         img = document.getElementById("profImage");
         img.height = y;
@@ -390,7 +391,6 @@ function postImageToFacebook(token, filename, mimeType, imageData, message) {
         },
         complete: function (data) {
             $.mobile.loading("hide");
-            alert('Sending failed. Please try again.');
             alert("Done!");
         }
     });
