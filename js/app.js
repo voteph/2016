@@ -315,10 +315,10 @@ function statusChangeCallback(r, a) {
     if (a === 'post'){
       if (confirm("The image will be uploaded to your photo and post to your feed.")){
         var message = prompt("Write a message.", "");
-        postImageToFacebook(response.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, message);
+        postImageToFacebook(r.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, message);
       }
     }
-  } else if (response.status === 'not_authorized') {
+  } else if (r.status === 'not_authorized') {
     profName.innerHTML =  "";
     profImage.src = "";
     print(vote);
