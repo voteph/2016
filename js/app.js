@@ -167,10 +167,9 @@ app.resetVote = function() {
     titleIDValue = titleID.getAttribute('value') + "dist"
     if ((localStorage.getItem(titleIDValue) !== null) || (localStorage.getItem(titleIDValue) !== "")) {
         localStorage.removeItem(titleIDValue);
-        $.mobile.pageContainer.pagecontainer("change", "#district-page", {});
     }
   }
-  app.draw(vote);
+  location.reload();
   $.mobile.loading("hide");
 }
 app.saveVote = function() {
@@ -181,22 +180,10 @@ app.saveVote = function() {
           var itemValue = '';
           itemValue = titleID.getAttribute('value') + value.id
           localStorage.setItem(itemValue, $(value).val());
-          if(typeof window.orientation == 'undefined'){
-            vote.push({
-                "pos": $(value).parent().prev().text(),
-                "can": $(value).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
-            })
-          } else {
-            var can = $("option:selected", $(value)).text().replace(/\)/g, ")|").split("|")
-            can.pop()
-            if (can.length=="0"){
-              can.push(" ")
-            }
-            vote.push({
-                "pos": $(value).parent().parent().prev().text(),
-                "can": can
-            })
-          }
+          vote.push({
+              "pos": $(value).parent().prev().text(),
+              "can": $(value).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
+          })
       });
       app.draw(vote);
       $.mobile.pageContainer.pagecontainer("change", "#about-page", {});
@@ -218,11 +205,6 @@ app.initialize = function() {
       $.each($("select[class=selectID]"), function(index, value) {
           var itemValue = '';
           itemValue = titleID.getAttribute('value') + value.id
-          if(typeof window.orientation == 'undefined'){
-            $(value).selectmenu("destroy");
-            $(value).attr("data-native-menu","false");
-            $(value).selectmenu();
-          }
           if ((localStorage.getItem(itemValue) !== null) && (localStorage.getItem(itemValue) !== "")) {
               var b = localStorage.getItem(itemValue);
               $.each(b.split(","), function(i, v) {
@@ -235,22 +217,10 @@ app.initialize = function() {
           }
       });
       $.each($("select[class=selectID]"), function(index, value) {
-        if(typeof window.orientation == 'undefined'){
-          vote.push({
-              "pos": $(value).parent().prev().text(),
-              "can": $(value).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
-          })
-        } else {
-          var can = $("option:selected", $(value)).text().replace(/\)/g, ")|").split("|")
-          can.pop()
-          if (can.length=="0"){
-            can.push(" ")
-          }
-          vote.push({
-              "pos": $(value).parent().parent().prev().text(),
-              "can": can
-          })
-        }
+        vote.push({
+            "pos": $(value).parent().prev().text(),
+            "can": $(value).prev().children(".selectID").text().replace(/\),\s/g, ")|").split("|")
+        })
       });
       app.initialize.setSelectLimit();
       app.draw(vote);
@@ -399,26 +369,14 @@ app.selectLimit = function(id, limit){
   var select = document.getElementById(id);
   select.verified = []
   $(select).on("change", function(){
-    if (typeof window.orientation == "undefined") {
-        var selected = $("option:selected", select).length;
-        if (selected === limit) {
-            $("option:not(:selected)", select).prop("disabled", true);
-            $(select).selectmenu("refresh", true);
-        }
-        if (selected < limit) {
-            $("option:disabled", select).prop("disabled", false);
-            $(select).selectmenu("refresh", true);
-        }
-    } else {
-        if (select.querySelectorAll("option:checked").length <= limit) {
-            select.verified = Array.apply(null, select.querySelectorAll("option:checked"));
-        } else {
-            Array.apply(null, select.querySelectorAll("option")).forEach(function(e) {
-                    e.selected = select.verified.indexOf(e) > -1;
-                });
-            alert("Please select only " + limit + " candidates.");
-            $(select).selectmenu("refresh", true);
-        }
+    var selected = $("option:selected", select).length;
+    if (selected === limit) {
+        $("option:not(:selected)", select).prop("disabled", true);
+        $(select).selectmenu("refresh", true);
+    }
+    if (selected < limit) {
+        $("option:disabled", select).prop("disabled", false);
+        $(select).selectmenu("refresh", true);
     }
   })
 }
