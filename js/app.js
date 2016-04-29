@@ -284,9 +284,8 @@ function statusChangeCallback(r, a) {
     $.mobile.loading("show");
     getUserName();
     if (a === 'post'){
-      if (confirm("The image will be uploaded to your photo and post to your feed.")){
-        var message = prompt("Write a message.", "");
-        postImageToFacebook(r.authResponse.accessToken, "Canvas to Facebook", "image/png", blob, message);
+      if (confirm("The image will be uploaded to your photo and share it to Facebook.")){
+        postImageToFacebook(r.authResponse.accessToken, "Canvas to Facebook", "image/png", blob);
       }
     }
   } else if (r.status === 'not_authorized') {
@@ -308,7 +307,7 @@ function dataURItoBlob(dataURI) {
     }
     return new Blob([ab], {type: 'image/png'});
   }
-function postImageToFacebook(token, filename, mimeType, imageData, message) {
+function postImageToFacebook(token, filename, mimeType, imageData) {
     var fd = new FormData();
     fd.append("access_token", token);
     fd.append("source", imageData);
@@ -330,15 +329,13 @@ function postImageToFacebook(token, filename, mimeType, imageData, message) {
                 function (response) {
                     if (response && !response.error) {
                         //SHARE TO FEED
-                        FB.api(
-                            "/me/feed",
-                            "POST",
+                        FB.ui(
                             {
-                                "message": message,
-                                "picture": response.images[0].source,
-                                "link": 'http://voteph.github.io/2016/index.html',
-                                "name": "Are you ready for this coming election?",
-                                "description": "Share your vote to your love one and show your support to your candidates."
+                                method: "feed",
+                                picture: response.images[0].source,
+                                link: 'http://voteph.github.io/2016/index.html',
+                                name: "Are you ready for this coming election?",
+                                caption: "Share your vote to your love one and show your support to your candidates."
                             },
                             function (response) {
                                 if (response && !response.error) {
